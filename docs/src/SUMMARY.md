@@ -13,6 +13,7 @@
   - [Architectural Variants](architecture/variants.md)
   - [Architecture Decision Records](architecture/adr.md)
     - [Minimal Host](architecture/adr/minimal-host.md)
+    - [Partitioning](architecture/adr/declarative_partitioning.md)
     - [Networking VM](architecture/adr/netvm.md)
     - [Platform Bus for Rust VMM](architecture/adr/platform-bus-passthrough-support.md)
   - [Stack](architecture/stack.md)
