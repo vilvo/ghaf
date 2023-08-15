@@ -7,11 +7,11 @@
   nixos-generators,
   lib,
 }: let
-  name = "generic-installer-x86_64";
-  system = "x86_64-linux";
   formatModule = nixos-generators.nixosModules.raw-efi;
-  generic-installer-x86 = let
-    hostConfiguration = lib.nixosSystem {
+  installer = {name, systemImgCfg}: let
+    system = systemImgCfg.config.nixpkgs.hostPlatform.system;
+    systemImgDrv = systemImgCfg.config.system.build.${systemImgCfg.config.formatAttr};
+    installerImgCfg = lib.nixosSystem {
       inherit system;
       specialArgs = {inherit (self) lib;};
       modules =
@@ -24,20 +24,24 @@
             };
           }
 
+          {
+            # TODO
+            environment.loginShellInit = ''
+              cp -r ${systemImgDrv} ~/systemImage
+            '';
+          }
+
           formatModule
         ]
         ++ (import ../modules/module-list.nix);
     };
   in {
-    inherit hostConfiguration name;
-    package = hostConfiguration.config.system.build.${hostConfiguration.config.formatAttr};
+    name = "${name}-installer";
+    inherit installerImgCfg installerImgDrv system;
   };
-  targets = [generic-installer-x86];
+  targets = map installer [{name = "generic-x86-release"; systemImgCfg = self.nixosConfigurations.generic-x86_64-release;}];
 in {
-  nixosConfigurations =
-    builtins.listToAttrs (map (t: lib.nameValuePair t.name t.hostConfiguration) targets);
-  packages = {
-    x86_64-linux =
-      builtins.listToAttrs (map (t: lib.nameValuePair t.name t.package) targets);
-  };
+  packages = lib.foldr lib.recursiveUpdate {} (map ({name, system, installerImgDrv, ...}: {
+    ${system}.${name} = installerImgDrv;
+  }) targets);
 }
