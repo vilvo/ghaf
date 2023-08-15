@@ -6,12 +6,11 @@
   lib,
   ...
 }: let
-  cfg = config.ghaf.profiles.release;
+  cfg = config.ghaf.profiles.installer;
 in
   with lib; {
-    options.ghaf.installer.release = {
-      enable = mkEnableOption "installer profile";
-    };
+    options.ghaf.profiles.installer.enable = mkEnableOption "installer profile";
+
 
     config = mkIf cfg.enable {
       # Use less privileged ghaf user

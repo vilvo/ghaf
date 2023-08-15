@@ -13,7 +13,7 @@
     systemImgDrv = systemImgCfg.config.system.build.${systemImgCfg.config.formatAttr};
     installerImgCfg = lib.nixosSystem {
       inherit system;
-      specialArgs = {inherit (self) lib;};
+      specialArgs = {inherit lib;};
       modules =
         [
           ../modules/host
