@@ -37,9 +37,10 @@
     };
   in {
     name = "${name}-installer";
-    inherit installerImgCfg installerImgDrv system;
+    inherit installerImgCfg system;
+    installerImgDrv = installerImgCfg.config.system.build.${installerImgCfg.config.formatAttr};
   };
-  targets = map installer [{name = "generic-x86-release"; systemImgCfg = self.nixosConfigurations.generic-x86_64-release;}];
+  targets = map installer [{name = "generic-x86_64-release"; systemImgCfg = self.nixosConfigurations.generic-x86_64-release;}];
 in {
   packages = lib.foldr lib.recursiveUpdate {} (map ({name, system, installerImgDrv, ...}: {
     ${system}.${name} = installerImgDrv;
