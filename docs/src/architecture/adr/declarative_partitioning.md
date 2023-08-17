@@ -141,6 +141,14 @@ $ mount | grep sda
 /dev/sda2 on /mnt type ext4 (rw,relatime)
 /dev/sda1 on /mnt/boot type vfat (rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro)
 ```
+### Test - boot NixOS aarch64 installer on NVIDIA Orin AGX
+
+```
+❯ sudo dd if=nixos-minimal-new-kernel-23.05pre456191.b69883faca9-aarch64-linux.iso of=/dev/sdb bs=32M status=progress
+```
+
+Boots to NixOS installer menu (`default|nomodeset|debug`) on Orin AGX but does not boot to installer shell nor give any errors to serial debug.
+This blocks testing `disko` on the Orin AGX internal persistent memory. One solution could be to build a custom initrd or Unified Kernel Image based on Jetson BSP and test with that.
 
 ## Decision
 
