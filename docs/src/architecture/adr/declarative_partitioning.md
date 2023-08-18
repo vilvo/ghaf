@@ -25,10 +25,10 @@ NixOS, and traditional Linux distributions, share some of the aforementioned iss
 
 | Feature    | `aarch64` support | `x86-64` support |
 |------------|-------------------|------------------|
-| GPT layout |        X          |      TDE            |
-| LVM        |        TDE        |      TDE            |
-| ext4       |        X          |      TDE            |
-| tmpfs      |        TDE        |      TDE            |
+| GPT layout |        X          |      TDE         |
+| LVM        |        TDE        |      TDE         |
+| ext4       |        X          |      TDE         |
+| tmpfs      |        TDE        |      TDE         |
 
 
 ## Evaluation
@@ -149,6 +149,115 @@ $ mount | grep sda
 
 Boots to NixOS installer menu (`default|nomodeset|debug`) on Orin AGX but does not boot to installer shell nor give any errors to serial debug.
 This blocks testing `disko` on the Orin AGX internal persistent memory. One solution could be to build a custom initrd or Unified Kernel Image based on Jetson BSP and test with that.
+
+### Test - boot aarch64 jetpack-nixos installer on NVIDIA Orin NX
+
+1. Clone https://github.com/anduril/jetpack-nixos and add your public ssh keys to `installer_minimal_config { };` in [jetpack-nixos flake.nix](https://github.com/anduril/jetpack-nixos/blob/master/flake.nix) like:
+```
+    installer_minimal_config = {
+      ...
+      users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDdNDuKwAsAff4iFRfujo77W4cyAbfQHjHP57h/7tJde ville.ilvonen@unikie.com" ];
+      users.users.nixos.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDdNDuKwAsAff4iFRfujo77W4cyAbfQHjHP57h/7tJde ville.ilvonen@unikie.com" ];
+      ...
+    };
+```
+(1.-step is needed due to out-of-the-box display and serial access issues on Orin NX)
+2. Build the modified ISO with `nix build .#iso_minimal`
+3. Write the ISO to USB removable media
+4. Boot NVIDIA Orin NX with the USB removable media from previous step
+5. Connect the Orin NX to ethernet and login with your ssh key
+   (e.g. `ssh -i <your_private_key> root@1.2.3.4`)
+6. Check the Orin NX persistent media partitions with `lsblk`:
+```
+[root@nixos:~]# lsblk
+NAME         MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+loop0          7:0    0 726.8M  1 loop /nix/.ro-store
+sda            8:0    1 232.9G  0 disk /iso
+nvme0n1      259:0    0 465.8G  0 disk
+├─nvme0n1p1  259:1    0   465G  0 part
+├─nvme0n1p2  259:2    0    64M  0 part
+├─nvme0n1p3  259:3    0   448K  0 part
+├─nvme0n1p4  259:4    0    32M  0 part
+├─nvme0n1p5  259:5    0    64M  0 part
+├─nvme0n1p6  259:6    0   448K  0 part
+├─nvme0n1p7  259:7    0    32M  0 part
+├─nvme0n1p8  259:8    0    80M  0 part
+├─nvme0n1p9  259:9    0   512K  0 part
+├─nvme0n1p10 259:10   0   300M  0 part
+├─nvme0n1p11 259:11   0    64M  0 part
+├─nvme0n1p12 259:12   0    80M  0 part
+├─nvme0n1p13 259:13   0   512K  0 part
+└─nvme0n1p14 259:14   0    64M  0 part
+```
+(above partitions on `nvme0n1` reflect the NVIDIA jetpack-based Ubuntu)
+7. Run `disko` with `nix --extra-experimental-features nix-command --extra-experimental-features flakes run github:nix-community/disko -- --mode disko ./disko-config.nix --arg disks '[ "/dev/nvme0n1" ]'`
+
+using the following config (`./disko-config.nix`):
+
+```
+{
+  disko.devices = {
+    disk = {
+      main = {
+        type = "disk";
+        device = "/dev/nvme0n1";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              size = "1M";
+              type = "EF02"; # for grub MBR
+            };
+            ESP = {
+              size = "512M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+8. Verify created partitions
+```
+[root@nixos:~]# lsblk
+NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+loop0         7:0    0 726.8M  1 loop /nix/.ro-store
+sda           8:0    1 232.9G  0 disk /iso
+nvme0n1     259:0    0 465.8G  0 disk
+├─nvme0n1p1 259:1    0   512M  0 part /mnt/boot
+├─nvme0n1p2 259:2    0     1M  0 part
+└─nvme0n1p3 259:3    0 465.3G  0 part /mnt
+```
+9. Generate NixOS config with `nixos-generate-config --root /mnt/`
+10. Modify `/mnt/etc/nixos/configuration.nix` with:
+```
+  imports =
+    [
+      ./hardware-configuration.nix
+      (builtins.fetchTarball "https://github.com/anduril/jetpack-nixos/archive/master.tar.gz" + "/modules/default.nix")
+    ];
+
+  hardware.nvidia-jetpack.enable = true;
+  hardware.nvidia-jetpack.som = "xavier-nx";
+  hardware.nvidia-jetpack.carrierBoard = "devkit";
+```
+11. Install NixOS with `nixos-install`
+12. Boot to NixOS after installation finishes
 
 ## Decision
 
