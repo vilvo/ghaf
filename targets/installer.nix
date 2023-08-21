@@ -15,7 +15,7 @@
     pkgs = import nixpkgs {inherit system;};
     systemImgDrv = systemImgCfg.config.system.build.${systemImgCfg.config.formatAttr};
 
-    installerScript = import ../modules/installer/installer.nix { inherit pkgs systemImgDrv; inherit (pkgs) runtimeShell; };
+    installerScript = import ../modules/installer/installer.nix { inherit pkgs; systemImgDrv = "${systemImgDrv}/nixos.img";  inherit (pkgs) runtimeShell; };
 
     installerImgCfg = lib.nixosSystem {
       inherit system;

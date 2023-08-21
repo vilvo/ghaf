@@ -8,5 +8,5 @@ pkgs.substituteAll {
 
   name = "ghaf-installer";
   src = ./installer.sh;
-  inherit runtimeShell;
+  inherit runtimeShell systemImgDrv;
 }
