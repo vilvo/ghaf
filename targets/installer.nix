@@ -23,12 +23,16 @@
       modules =
         [
           ../modules/host
-          {
-            ghaf = {
-              hardware.x86_64.common.enable = true;
-              profiles.installer.enable = true;
-            };
-          }
+
+          ({modulesPath, ...}: {
+            imports = [ (modulesPath + "/profiles/all-hardware.nix") ];
+
+            nixpkgs.hostPlatform.system = systemImgCfg.config.nixpkgs.config.allowUnfree;
+
+            hardware.enableAllFirmware = true;
+
+            ghaf.profiles.installer.enable = true;
+          })
 
           {
             # TODO
