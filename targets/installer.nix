@@ -27,7 +27,7 @@
           ({modulesPath, ...}: {
             imports = [ (modulesPath + "/profiles/all-hardware.nix") ];
 
-            nixpkgs.hostPlatform.system = systemImgCfg.config.nixpkgs.hostPlatform.system;
+            nixpkgs.hostPlatform.system = system;
             nixpkgs.config.allowUnfree = true;
 
             hardware.enableAllFirmware = true;
