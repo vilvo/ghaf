@@ -9,7 +9,7 @@
   lib,
 }: let
   formatModule = nixos-generators.nixosModules.raw-efi;
-  installer = {name, systemImgCfg}: let
+  installer = {name, systemImgCfg, modules ? []}: let
     system = systemImgCfg.config.nixpkgs.hostPlatform.system;
 
     pkgs = import nixpkgs {inherit system;};
@@ -43,7 +43,7 @@
 
           formatModule
         ]
-        ++ (import ../modules/module-list.nix);
+        ++ (import ../modules/module-list.nix) ++ modules;
     };
   in {
     name = "${name}-installer";
