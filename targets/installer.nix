@@ -10,7 +10,7 @@
 }: let
   formatModule = nixos-generators.nixosModules.raw-efi;
   inherit (lib.ghaf) installer;
-  targets = map installer [{name = "generic-x86_64-release"; systemImgCfg = self.nixosConfigurations.generic-x86_64-release; modules = [formatModule];}];
+  targets = map installer [{name = "generic-x86_64-debug"; systemImgCfg = self.nixosConfigurations.generic-x86_64-debug; modules = [formatModule];}];
 in {
   packages = lib.foldr lib.recursiveUpdate {} (map ({name, system, installerImgDrv, ...}: {
     ${system}.${name} = installerImgDrv;
