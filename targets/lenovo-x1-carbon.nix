@@ -137,8 +137,8 @@
             hardware.pulseaudio.extraConfig = "load-module module-combine-sink module-native-protocol-unix auth-anonymous=1";
             users.extraUsers.microvm.extraGroups = ["audio" "pulse-access"];
 
-            ghaf = {
-              host.kernel_hardening.enable = false;
+            ghaf = rec {
+              host.kernel_hardening.enable = true;
 
               hardware.x86_64.common.enable = true;
 
@@ -205,6 +205,8 @@
                 ];
                 extraModules = [
                   ../overlays/custom-packages.nix
+                ] ++ lib.optionals host.kernel_hardening.enable [
+                  ../overlays/host/kernel/hardened-generic-x86_64.nix
                 ];
               };
 
