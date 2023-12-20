@@ -93,6 +93,12 @@
                   configH = config;
                 };
               };
+
+              virtualization.microvm.idsvm = {
+                enable = false;
+                mitmproxy.enable = false;
+              };
+
               virtualization.microvm.guivm = {
                 enable = true;
                 extraModules =
@@ -104,7 +110,7 @@
               };
               virtualization.microvm.appvm = {
                 enable = true;
-                vms = import ./appvms/default.nix {inherit pkgs;};
+                vms = import ./appvms/default.nix {inherit pkgs lib config;};
               };
 
               # Enable all the default UI applications
