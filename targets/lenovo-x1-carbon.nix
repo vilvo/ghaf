@@ -209,7 +209,8 @@
 
             ghaf = {
               hardware.definition = hwDefinition;
-              host.kernel_hardening.enable = false;
+              host.kernel_baseline_hardening.enable = false;
+              host.kernel_virtualization_hardening.enable = false;
 
               host.hypervisor_hardening.enable = false;
 
