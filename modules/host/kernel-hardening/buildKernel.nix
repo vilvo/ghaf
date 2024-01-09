@@ -1,11 +1,15 @@
 # Copyright 2022-2024 TII (SSRC) and the Ghaf contributors
 # SPDX-License-Identifier: CC-BY-SA-4.0
-{pkgs}: {
+{
+  pkgs,
+  lib,
+}: {
   src,
   modDirVersion,
   version,
   kernelPatches ? [],
-  kern_virt_cfg,
+  enable_kernel_virtualization,
+  enable_kernel_networking,
 }: let
   base_kernel =
     pkgs.linuxManualConfig rec
@@ -59,18 +63,32 @@
       configfile = ./ghaf_host_hardened_baseline;
     };
 
+  source = ./.;
+
+  has_virtualization =
+    if enable_kernel_virtualization
+    then ["${source}/virtualization.config"]
+    else [];
+
+  has_networking =
+    if enable_kernel_networking
+    then ["${source}/networking.config"]
+    else [];
+
+  kernel_features = [has_virtualization has_networking];
+
   kernel =
-    if kern_virt_cfg.enable
+    if lib.length kernel_features > 0
     then
       base_kernel.overrideAttrs (_old: {
-        source = ./.;
         postUnpack = ''
           mkdir $dev
            cp $sourceRoot/scripts/kconfig/merge_config.sh $dev;
         '';
 
+        inherit kernel_features;
         postConfigure = ''
-          $dev/merge_config.sh  -O $buildRoot $buildRoot/.config $source/virtualization.config ;
+          $dev/merge_config.sh  -O $buildRoot $buildRoot/.config  $kernel_features;
         '';
       })
     else base_kernel;

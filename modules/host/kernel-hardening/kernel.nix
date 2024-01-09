@@ -27,7 +27,7 @@
   # Create kernel derivation and override nix phases
   hardened_kernel = buildKernel {
     inherit (baseKernel) src modDirVersion version;
-    inherit kern_virt_cfg;
+    inherit enable_kernel_virtualization enable_kernel_networking;
   };
 
   pkvm_patch = lib.mkIf config.ghaf.hardware.x86_64.common.enable [
@@ -46,8 +46,11 @@
     }
   ];
 
-  kern_base_cfg = config.ghaf.host.kernel_baseline_hardening;
-  kern_virt_cfg = config.ghaf.host.kernel_virtualization_hardening;
+  # Configuration options
+  enable_kernel_baseline = config.ghaf.host.kernel_baseline_hardening.enable;
+  enable_kernel_virtualization = config.ghaf.host.kernel_virtualization_hardening.enable;
+  enable_kernel_networking = config.ghaf.host.kernel_networking_hardening.enable;
+
   hyp_cfg = config.ghaf.host.hypervisor_hardening;
 in
   with lib; {
@@ -60,12 +63,18 @@ in
     };
 
     options.ghaf.host.kernel_virtualization_hardening.enable = lib.mkOption {
-      description = "Virtualization hardening";
+      description = "Virtualization hardening for Ghaf Host";
       type = lib.types.bool;
       default = false;
     };
 
-    config = mkIf kern_base_cfg.enable {
+    options.ghaf.host.kernel_networking_hardening.enable = lib.mkOption {
+      description = "Networking hardening for Ghaf Host";
+      type = lib.types.bool;
+      default = false;
+    };
+
+    config = mkIf enable_kernel_baseline {
       boot.kernelPackages = pkgs.linuxPackagesFor hardened_kernel;
       boot.kernelPatches = mkIf (hyp_cfg.enable && "${baseKernel.version}" == "6.1.55") pkvm_patch;
       # https://github.com/NixOS/nixpkgs/pull/78430#issuecomment-899094778
