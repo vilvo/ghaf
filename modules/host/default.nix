@@ -15,7 +15,7 @@
 
     ../../overlays/custom-packages
 
-    ./kernel-hardening/kernel.nix
+    ./hardening.nix {inherit lib;}
 
     # TODO: Refactor this under virtualization/microvm/host/networking.nix
     ./networking.nix
