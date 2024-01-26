@@ -4,7 +4,10 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+let
+  vhost-device = pkgs.callPackage ../../packages/vhost-device {};
+in {
   imports = [
     # TODO remove this when the minimal config is defined
     # Replace with the baseModules definition
@@ -24,6 +27,18 @@
   config = {
     networking.hostName = "ghaf-host";
     system.stateVersion = lib.trivial.release;
+
+    systemd.services.vhost-device-vsock = {
+      enable = true;
+      description = "vhost-device-vsock";
+      unitConfig = {
+        Type = "simple";
+      };
+      serviceConfig = {
+        ExecStart = "${vhost-device}/bin/vhost-device-vsock --vm guest-cid=3,uds-path=/tmp/vm3.vsock,socket=/tmp/vhost3.socket --vm guest-cid=4,uds-path=/tmp/vm4.vsock,socket=/tmp/vhost4.socket";
+      };
+      wantedBy = ["multi-user.target"];
+    };
 
     ####
     # temp means to reduce the image size
