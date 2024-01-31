@@ -43,18 +43,21 @@ NixOS provides several mechanisms to customize the kernel. The main methods are:
 
   ```
   [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ cp ../modules/host/kernel/ghaf_host_hardened_baseline .config
-  [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ ./scripts/kconfig/merge_config.sh .config ../modules/host/kernel/configs/virtualization.config ../modules/host/kernel/configs/networking.config ../modules/host/kernel/configs/user-input-devices.config ../modules/host/kernel/configs/usb.config ../modules/host/kernel/configs/guest.config
+  [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ ./scripts/kconfig/merge_config.sh .config ../modules/host/kernel/configs/virtualization.config ../modules/host/kernel/configs/networking.config ../modules/host/kernel/configs/user-input-devices.config \
+                                             ../modules/host/kernel/configs/usb.config ../modules/guest/kernel/configs/guest.config ../modules/guest/kernel/configs/display-gpu.config
   [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ kernel-hardening-checker -c .config
   [+] Kconfig file to check: .config
   [+] Detected microarchitecture: X86_64
   [+] Detected kernel version: 6.6
   [+] Detected compiler: GCC 120300
   ...
-  [+] Config check is finished: 'OK' - 190 / 'FAIL' - 6
+  [+] Config check is finished: 'OK' - 188 / 'FAIL' - 8
   [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ kernel-hardening-checker -c .config| grep 'FAIL: '
   CONFIG_CFI_CLANG                        |kconfig|     y      |   kspp   | self_protection  | FAIL: is not found
   CONFIG_CFI_PERMISSIVE                   |kconfig| is not set |   kspp   | self_protection  | FAIL: CONFIG_CFI_CLANG is not "y"
   CONFIG_MODULES                          |kconfig| is not set |   kspp   |cut_attack_surface| FAIL: "y"
+  CONFIG_KCMP                             |kconfig| is not set |  grsec   |cut_attack_surface| FAIL: "y"
+  CONFIG_FB                               |kconfig| is not set |maintainer|cut_attack_surface| FAIL: "y"
   CONFIG_VT                               |kconfig| is not set |maintainer|cut_attack_surface| FAIL: "y"
   CONFIG_KSM                              |kconfig| is not set |  clipos  |cut_attack_surface| FAIL: "y"
   CONFIG_TRIM_UNUSED_KSYMS                |kconfig|     y      |    my    |cut_attack_surface| FAIL: "is not set"
@@ -97,3 +100,9 @@ To enable GUI, set Virtualization, Networking and User Input Devices support. As
 The Guest support will add the required kernel config dependency to the Ghaf baseline by which NixOS has guest enabled. The added functionality is vsock for host-to-guest and guest-to-guest communication.
 
 It can be enabled with the following flag `guest.hardening.enable` for Lenovo X1.
+
+### Guest Graphics Support
+
+The Guest Graphics support will add the required kernel config dependency to the Ghaf baseline by which NixOS has guest graphics enabled. The added functionality is for guest with graphics support enabled.
+
+It can be enabled with the following flag `guest.graphics_hardening.enable` for Lenovo X1.
