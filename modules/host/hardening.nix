@@ -3,6 +3,7 @@
 {lib, ...}: {
   imports = [
     ./kernel
+    ./kernel/pkvm.nix
     # other host hardening modules - to be defined later
   ];
 
