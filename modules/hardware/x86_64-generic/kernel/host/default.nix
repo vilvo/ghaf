@@ -7,12 +7,18 @@
   ...
 }: let
   # Importing kernel builder function from packages and checking hardening options
-  buildKernel = import ../../../packages/kernel {inherit config pkgs lib;};
+  buildKernel = import ../../../../../packages/kernel {inherit config pkgs lib;};
   host_hardened_kernel = buildKernel {};
 
   enable_kernel_baseline = config.ghaf.host.kernel.baseline_hardening.enable;
 in
   with lib; {
+    options.ghaf.host.hardening.enable = lib.mkOption {
+      description = "Host hardening";
+      type = lib.types.bool;
+      default = false;
+    };
+
     options.ghaf.host.kernel.baseline_hardening.enable = mkOption {
       description = "Host kernel hardening";
       type = types.bool;

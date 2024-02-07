@@ -1,15 +1,18 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+# Copyright 2022-2024 TII (SSRC) and the Ghaf contributors
+# SPDX-License-Identifier: Apache-2.0
+{config, ...}: {
   imports = [
     ../default.nix
   ];
 
-  config.ghaf.host.kernel.baseline_hardening.enable = true;
+  # baseline, virtualization and network hardening are
+  # generic to all x86_64 devices
+  # TODO: need to investigate on error caused on running `nix flake show`
+  # https://github.com/NixOS/nix/pull/5253
+  config.ghaf.host.kernel.baseline_hardening.enable = false;
   config.ghaf.host.kernel.virtualization_hardening.enable = true;
   config.ghaf.host.kernel.networking_hardening.enable = true;
+  # usb hardening is host optional but required for -debug builds
   config.ghaf.host.kernel.usb_hardening.enable = true;
 
   # required to module test a module via top level configuration

@@ -15,8 +15,6 @@
 
     ../../overlays/custom-packages
 
-    ./hardening.nix
-
     # TODO: Refactor this under virtualization/microvm/host/networking.nix
     ./networking.nix
   ];

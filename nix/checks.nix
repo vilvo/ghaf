@@ -16,8 +16,8 @@
             reuse lint
             touch $out
           '';
-        module-test-hardened-host-kernel =
-          pkgs.callPackage ../modules/host/kernel/test {inherit pkgs;};
+        module-test-hardened-generic-host-kernel =
+          pkgs.callPackage ../modules/hardware/x86_64-generic/kernel/host/test {inherit pkgs;};
       }
       // (lib.mapAttrs' (n: lib.nameValuePair "package-${n}") self'.packages);
   };

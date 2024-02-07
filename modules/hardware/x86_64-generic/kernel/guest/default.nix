@@ -12,8 +12,4 @@ with lib; {
     type = lib.types.bool;
     default = false;
   };
-  config = {
-    # Guest kernel hardening
-    ghaf.guest.graphics_hardening.enable = false;
-  };
 }

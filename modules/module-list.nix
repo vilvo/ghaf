@@ -11,6 +11,7 @@
   ./hardware/definition.nix
   ./hardware/nvidia-jetson-orin/optee.nix
   ./hardware/x86_64-linux.nix
+  ./hardware/x86_64-generic/kernel/hardening.nix
   ./installer
   ./profiles/applications.nix
   ./profiles/debug.nix
@@ -21,5 +22,4 @@
   ./version
   ./virtualization/docker.nix
   ./windows-launcher
-  ./guest
 ]
