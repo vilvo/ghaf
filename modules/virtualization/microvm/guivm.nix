@@ -121,10 +121,11 @@
 
   # Importing kernel builder function from packages and checking hardening options
   buildKernel = import ../../../packages/kernel {inherit config pkgs lib;};
+  config_baseline = ../../hardware/x86_64-generic/kernel/configs/ghaf_host_hardened_baseline;
   enable_kernel_guest = config.ghaf.guest.hardening.enable;
   enable_kernel_guest_graphics = config.ghaf.guest.graphics_hardening.enable;
   guest_graphics_hardened_kernel = buildKernel {
-    inherit enable_kernel_guest enable_kernel_guest_graphics;
+    inherit enable_kernel_guest enable_kernel_guest_graphics config_baseline;
   };
 in {
   options.ghaf.virtualization.microvm.guivm = {

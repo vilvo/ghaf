@@ -18,7 +18,33 @@
     {
       inherit (kernel_package) src;
       inherit version modDirVersion kernelPatches;
-      allowImportFromDerivation = true;
+      allowImportFromDerivation = false;
+      config = {
+        CONFIG_DEVTMPFS = "y";
+        CONFIG_CGROUPS = "y";
+        CONFIG_INOTIFY_USER = "y";
+        CONFIG_SIGNALFD = "y";
+        CONFIG_TIMERFD = "y";
+        CONFIG_EPOLL = "y";
+        CONFIG_NET = "y";
+        CONFIG_SYSFS = "y";
+        CONFIG_PROC_FS = "y";
+        CONFIG_FHANDLE = "y";
+        CONFIG_CRYPTO_USER_API_HASH = "y";
+        CONFIG_CRYPTO_HMAC = "y";
+        CONFIG_CRYPTO_SHA256 = "y";
+        CONFIG_DMIID = "y";
+        CONFIG_AUTOFS_FS = "y";
+        CONFIG_TMPFS_POSIX_ACL = "y";
+        CONFIG_TMPFS_XATTR = "y";
+        CONFIG_SECCOMP = "y";
+        CONFIG_TMPFS = "y";
+        CONFIG_BLK_DEV_INITRD = "y";
+        CONFIG_EFI_STUB = "y";
+        CONFIG_MODULES = "y";
+        CONFIG_BINFMT_ELF = "y";
+        CONFIG_UNIX = "y";
+      };
       /*
       baseline "make tinyconfig"
       - enabled for 64-bit, TTY, printk and initrd

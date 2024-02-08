@@ -7,8 +7,6 @@
 
   # baseline, virtualization and network hardening are
   # generic to all x86_64 devices
-  # TODO: need to investigate on error caused on running `nix flake show`
-  # https://github.com/NixOS/nix/pull/5253
   config.ghaf.host.kernel.baseline_hardening.enable = true;
   config.ghaf.host.kernel.virtualization_hardening.enable = true;
   config.ghaf.host.kernel.networking_hardening.enable = true;
