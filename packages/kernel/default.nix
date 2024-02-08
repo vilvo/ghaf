@@ -6,6 +6,7 @@
   lib,
 }: {
   kernelPatches ? [],
+  config_baseline,
   enable_kernel_guest ? false,
   enable_kernel_guest_graphics ? false,
 }: let
@@ -62,7 +63,7 @@
       - also see https://github.com/NixOS/nixpkgs/issues/109280
         for the context >
       */
-      configfile = ../../modules/hardware/x86_64-generic/kernel/configs/ghaf_host_hardened_baseline;
+      configfile = config_baseline;
     };
 
   generic_host_configs = ../../modules/hardware/x86_64-generic/kernel/host/configs;
