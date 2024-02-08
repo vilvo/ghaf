@@ -18,6 +18,8 @@
           '';
         module-test-hardened-generic-host-kernel =
           pkgs.callPackage ../modules/hardware/x86_64-generic/kernel/host/test {inherit pkgs;};
+        module-test-hardened-lenovo-x1-guest-guivm-kernel =
+          pkgs.callPackage ../modules/hardware/lenovo-x1/kernel/guest/test {inherit pkgs;};
       }
       // (lib.mapAttrs' (n: lib.nameValuePair "package-${n}") self'.packages);
   };
