@@ -3,6 +3,8 @@
 {config, ...}: {
   imports = [
     ../default.nix
+    # import guest also to bring the defaults (false) to scope
+    ../../guest/default.nix
   ];
 
   # baseline, virtualization and network hardening are
