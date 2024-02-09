@@ -18,8 +18,8 @@
       inherit version modDirVersion kernelPatches;
       /*
       NixOS required (asserted) kernel features
-      to comply with no import from derivation
-      for the actual kernel build these config
+      to comply with no import from derivation.
+      For the actual kernel build these config
       options must come via the kernel
       config_baseline argument
       */
