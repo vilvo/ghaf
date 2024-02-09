@@ -52,9 +52,9 @@
 
   # Importing kernel builder function from packages and checking hardening options
   buildKernel = import ../../../packages/kernel {inherit config pkgs lib;};
-  config_baseline = ../../hardware/x86_64-generic/kernel/configs/ghaf_host_hardened_baseline;
-  enable_kernel_guest = config.ghaf.guest.hardening.enable;
-  guest_hardened_kernel = buildKernel {inherit enable_kernel_guest config_baseline;};
+  config_baseline = ../../hardware/x86_64-generic/kernel/configs/ghaf_host_hardened_baseline-x86;
+  #enable_kernel_guest = config.ghaf.guest.hardening.enable;
+  guest_hardened_kernel = buildKernel {inherit config_baseline;};
 in {
   config = lib.mkIf cfg.enable {
     microvm.vms."${vmName}" = {

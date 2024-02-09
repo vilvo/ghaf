@@ -8,7 +8,7 @@
 }: let
   # Importing kernel builder function from packages and checking hardening options
   buildKernel = import ../../../../../packages/kernel {inherit config pkgs lib;};
-  hardened_baseline = ../configs/ghaf_host_hardened_baseline;
+  hardened_baseline = ../configs/ghaf_host_hardened_baseline-x86;
   host_hardened_kernel = buildKernel {config_baseline = hardened_baseline;};
 
   enable_kernel_baseline = config.ghaf.host.kernel.baseline_hardening.enable;

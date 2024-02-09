@@ -16,11 +16,13 @@
     {
       inherit (kernel_package) src;
       inherit version modDirVersion kernelPatches;
-      /* NixOS required (asserted) kernel features
-         to comply with no import from derivation
-         for the actual kernel build these config
-         options must come via the kernel
-         config_baseline argument */
+      /*
+      NixOS required (asserted) kernel features
+      to comply with no import from derivation
+      for the actual kernel build these config
+      options must come via the kernel
+      config_baseline argument
+      */
       config = {
         CONFIG_DEVTMPFS = "y";
         CONFIG_CGROUPS = "y";
