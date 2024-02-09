@@ -7,9 +7,10 @@
     ../default.nix
   ];
 
-  config.ghaf.host.kernel_baseline_hardening.enable = true;
-  config.ghaf.host.kernel_virtualization_hardening.enable = true;
-  config.ghaf.host.kernel_networking_hardening.enable = true;
+  config.ghaf.host.kernel.baseline_hardening.enable = true;
+  config.ghaf.host.kernel.virtualization_hardening.enable = true;
+  config.ghaf.host.kernel.networking_hardening.enable = true;
+  config.ghaf.host.kernel.usb_hardening.enable = true;
 
   # required to module test a module via top level configuration
   config.boot.loader.systemd-boot.enable = true;

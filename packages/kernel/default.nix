@@ -62,47 +62,22 @@
       - also see https://github.com/NixOS/nixpkgs/issues/109280
         for the context >
       */
-      configfile = ../../modules/host/kernel/ghaf_host_hardened_baseline;
+      configfile = ../../modules/hardware/x86_64-generic/kernel/configs/ghaf_host_hardened_baseline;
     };
 
-  host_source = ../../modules/host/kernel/configs;
-  guest_source = ../../modules/guest/kernel/configs;
-  enable_kernel_virtualization = config.ghaf.host.kernel.virtualization_hardening.enable;
-  enable_kernel_networking = config.ghaf.host.kernel.networking_hardening.enable;
-  enable_kernel_usb = config.ghaf.host.kernel.usb_hardening.enable;
-  enable_kernel_inputdevices = config.ghaf.host.kernel.inputdevices_hardening.enable;
+  generic_host_configs = ../../modules/hardware/x86_64-generic/kernel/host/configs;
+  generic_guest_configs = ../../modules/hardware/x86_64-generic/kernel/guest/configs;
+  # TODO: refactor - do we yet have any X1 specific host kernel configuration options?
+  # - we could add a configuration fragment for host debug via usb-ethernet-adapter(s)
+  # TODO: refactor config paths to
+  # x1_host_source = ../../modules/hardware/lenovo-x1/host/configs;
 
-  has_virtualization =
-    if enable_kernel_virtualization
-    then ["${host_source}/virtualization.config"]
-    else [];
-
-  has_networking =
-    if enable_kernel_networking
-    then ["${host_source}/networking.config"]
-    else [];
-
-  has_usb =
-    if enable_kernel_usb
-    then ["${host_source}/usb.config"]
-    else [];
-
-  has_inputdevices =
-    if enable_kernel_inputdevices
-    then ["${host_source}/user-input-devices.config"]
-    else [];
-
-  has_guest =
-    if enable_kernel_guest
-    then ["${guest_source}/guest.config"]
-    else [];
-
-  has_guest_graphics =
-    if enable_kernel_guest_graphics
-    then ["${guest_source}/display-gpu.config"]
-    else [];
-
-  kernel_features = [has_virtualization has_networking has_usb has_inputdevices has_guest has_guest_graphics];
+  kernel_features = lib.optionals config.ghaf.host.kernel.virtualization_hardening.enable ["${generic_host_configs}/virtualization.config"]
+                    ++ lib.optionals config.ghaf.host.kernel.networking_hardening.enable ["${generic_host_configs}/networking.config"]
+                    ++ lib.optionals config.ghaf.host.kernel.usb_hardening.enable ["${generic_host_configs}/usb.config"]
+                    ++ lib.optionals config.ghaf.host.kernel.inputdevices_hardening.enable ["${generic_host_configs}/user-input-devices.config"]
+                    ++ lib.optionals enable_kernel_guest ["${generic_guest_configs}/guest.config"]
+                    ++ lib.optionals enable_kernel_guest_graphics ["${generic_guest_configs}/display-gpu.config"];
 
   kernel =
     if lib.length kernel_features > 0
