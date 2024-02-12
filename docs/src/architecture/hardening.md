@@ -44,7 +44,7 @@ NixOS provides several mechanisms to customize the kernel. The main methods are:
   ```
   [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ cp ../modules/hardware/x86_64-generic/kernel/configs/ghaf_host_hardened_baseline .config
   [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ HS=../modules/hardware/x86_64-generic/kernel/host/configs GS=../modules/hardware/x86_64-generic/kernel/guest/configs
-  [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ ./scripts/kconfig/merge_config.sh .config $HS/virtualization.config $HS/networking.config $HS/usb.config $HS/user-input-devices.config $GS/guest.config $GS/display-gpu.config
+  [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ ./scripts/kconfig/merge_config.sh .config $HS/virtualization.config $HS/networking.config $HS/usb.config $HS/user-input-devices.config $HS/debug.config $GS/guest.config $GS/display-gpu.config
   [ghaf-kernel-devshell:~/ghaf/linux-6.6.7]$ kernel-hardening-checker -c .config
   [+] Kconfig file to check: .config
   [+] Detected microarchitecture: X86_64
@@ -89,7 +89,7 @@ The host Networking support will add the required kernel config dependency to th
 
 ### USB Support
 
-USB support on host is for the -debug-profile builds, not for hardened host -release-builds. As of now, USB support needs to be enabled when debug support to host via USB ethernet adapter (Lenovo X1) is needed or when the user want to boot Ghaf using an external SSD. It is optional in case Ghaf is used with internal NVME.
+USB support on host is for the `-debug-profile` builds, not for hardened host -release-builds. As of now, USB support needs to be enabled when debug support to host via USB ethernet adapter (Lenovo X1) is needed or when the user want to boot Ghaf using an external SSD. It is optional in case Ghaf is used with internal NVME.
 
 It can be enabled with the following flag `ghaf.host.kernel_usb_hardening.enable` for Lenovo X1.
 
@@ -98,6 +98,12 @@ It can be enabled with the following flag `ghaf.host.kernel_usb_hardening.enable
 The User Input Devices support will add the required kernel config dependency to the Ghaf baseline by which NixOS has user input devices enabled. It can be enabled with the following flag `ghaf.host.kernel_inputdevices_hardening.enable` for Lenovo X1.
 
 To enable GUI, set Virtualization, Networking and User Input Devices support. As of now, the kernel builds and can boot on Lenovo X1.
+
+### Debug Support
+
+The Debug support on host is for the `-debug-profile` builds, not for hardened host -release-builds. It can be helpful when debugging functionality is needed in a development environment.
+
+It can be enabled with the following flag `ghaf.host.kernel.debug_hardening.enable` for Lenovo X1.
 
 ### Guest Support
 

@@ -50,6 +50,12 @@ in
       default = false;
     };
 
+    options.ghaf.host.kernel.debug_hardening.enable = mkOption {
+      description = "Debug hardening for Ghaf Host";
+      type = types.bool;
+      default = false;
+    };
+
     config = mkIf enable_kernel_baseline {
       boot.kernelPackages = pkgs.linuxPackagesFor host_hardened_kernel;
       # https://github.com/NixOS/nixpkgs/issues/109280#issuecomment-973636212

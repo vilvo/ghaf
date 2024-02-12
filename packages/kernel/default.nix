@@ -62,6 +62,7 @@
     ++ lib.optionals config.ghaf.host.kernel.networking_hardening.enable ["${generic_host_configs}/networking.config"]
     ++ lib.optionals config.ghaf.host.kernel.usb_hardening.enable ["${generic_host_configs}/usb.config"]
     ++ lib.optionals config.ghaf.host.kernel.inputdevices_hardening.enable ["${generic_host_configs}/user-input-devices.config"]
+    ++ lib.optionals config.ghaf.host.kernel.debug_hardening.enable ["${generic_host_configs}/debug.config"]
     ++ lib.optionals config.ghaf.guest.hardening.enable ["${generic_guest_configs}/guest.config"]
     ++ lib.optionals config.ghaf.guest.graphics_hardening.enable ["${generic_guest_configs}/display-gpu.config"];
 

@@ -1,6 +1,10 @@
 # Copyright 2022-2024 TII (SSRC) and the Ghaf contributors
 # SPDX-License-Identifier: Apache-2.0
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   imports = [
     ../default.nix
     # import guest also to bring the defaults (false) to scope
@@ -21,5 +25,5 @@
     device = "/dev/disk/by-uuid/00000000-0000-0000-0000-000000000000";
     fsType = "ext4";
   };
-  config.system.stateVersion = "23.11";
+  config.system.stateVersion = lib.trivial.release;
 }

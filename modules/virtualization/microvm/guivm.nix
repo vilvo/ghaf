@@ -119,12 +119,9 @@
   cfg = config.ghaf.virtualization.microvm.guivm;
   vsockproxy = pkgs.callPackage ../../../packages/vsockproxy {};
 
-  # Importing kernel builder function from packages and checking hardening options
+  # Importing kernel builder function and building guest_graphics_hardened_kernel
   buildKernel = import ../../../packages/kernel {inherit config pkgs lib;};
   config_baseline = ../../hardware/x86_64-generic/kernel/configs/ghaf_host_hardened_baseline-x86;
-  # TODO: Find proper way to place configs, below are commented as its causing build errors
-  # config.ghaf.guest.hardening.enable = true;
-  # config.ghaf.guest.graphics_hardening.enable = true;
   guest_graphics_hardened_kernel = buildKernel {inherit config_baseline;};
 in {
   options.ghaf.virtualization.microvm.guivm = {
@@ -170,6 +167,7 @@ in {
           boot.kernelPackages =
             lib.mkIf config.ghaf.guest.graphics_hardening.enable
             (pkgs.linuxPackagesFor guest_graphics_hardened_kernel);
+
           imports =
             guivmBaseConfiguration.imports
             ++ cfg.extraModules;

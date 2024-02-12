@@ -4,7 +4,7 @@
   imports = [
     ./host
     ./guest
-    ./host/pkvm.nix
+    ./host/pkvm
     # other host hardening modules - to be defined later
   ];
 
@@ -15,6 +15,7 @@
     ghaf.host.kernel.networking_hardening.enable = false;
     ghaf.host.kernel.usb_hardening.enable = false;
     ghaf.host.kernel.inputdevices_hardening.enable = false;
+    ghaf.host.kernel.debug_hardening.enable = false;
     # host kernel hypervisor (KVM) hardening
     ghaf.host.hypervisor_hardening.enable = false;
     # guest kernel hardening
