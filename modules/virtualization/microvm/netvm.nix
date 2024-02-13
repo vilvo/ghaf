@@ -96,6 +96,10 @@
     ];
   };
   cfg = config.ghaf.virtualization.microvm.netvm;
+  buildKernel = import ../../../packages/kernel {inherit config pkgs lib;};
+  config_baseline =
+      ../../hardware/x86_64-generic/kernel/configs/ghaf_host_hardened_baseline-x86;
+  guest_hardened_kernel = buildKernel {inherit config_baseline;};
 in {
   options.ghaf.virtualization.microvm.netvm = {
     enable = lib.mkEnableOption "NetVM";
@@ -115,6 +119,7 @@ in {
       config =
         netvmBaseConfiguration
         // {
+          boot.kernelPackages = (pkgs.linuxPackagesFor guest_hardened_kernel);
           imports =
             netvmBaseConfiguration.imports
             ++ cfg.extraModules;

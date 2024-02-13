@@ -272,14 +272,14 @@
             ghaf = {
               hardware.definition = hwDefinition;
               # To enable guest hardening enable host hardening first
-              host.hardening.enable = false;
-              host.kernel.baseline_hardening.enable = false;
-              host.kernel.virtualization_hardening.enable = false;
-              host.kernel.networking_hardening.enable = false;
-              host.kernel.inputdevices_hardening.enable = false;
+              host.hardening.enable = lib.mkForce true;
+              host.kernel.baseline_hardening.enable = lib.mkForce true;
+              host.kernel.virtualization_hardening.enable = lib.mkForce true;
+              host.kernel.networking_hardening.enable = lib.mkForce true;
+              host.kernel.inputdevices_hardening.enable = lib.mkForce true;
 
-              guest.hardening.enable = false;
-              guest.graphics_hardening.enable = false;
+              guest.hardening.enable = lib.mkForce true;
+              guest.graphics_hardening.enable = lib.mkForce true;
 
               host.hypervisor_hardening.enable = false;
 
@@ -474,8 +474,8 @@
     }
     ../modules/hardware/x86_64-generic/kernel/host
     {
-      ghaf.host.kernel.usb_hardening.enable = false;
-      ghaf.host.kernel.debug_hardening.enable = false;
+      ghaf.host.kernel.usb_hardening.enable = lib.mkForce true;
+      ghaf.host.kernel.debug_hardening.enable = lib.mkForce true;
     }
   ];
   releaseModules = [
