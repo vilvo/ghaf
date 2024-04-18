@@ -14,7 +14,7 @@
   cores = 2;
   extraModules = [
     {
-      time.timeZone = "Asia/Dubai";
+      time.timeZone = config.time.timeZone;
       security.pki.certificateFiles =
         lib.mkIf config.ghaf.virtualization.microvm.idsvm.mitmproxy.enable
         [../../../modules/microvm/virtualization/microvm/idsvm/mitmproxy/mitmproxy-ca/mitmproxy-ca-cert.pem];
