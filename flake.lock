@@ -185,6 +185,32 @@
         "type": "github"
       }
     },
+    "givc": {
+      "inputs": {
+        "devshell": [
+          "devshell"
+        ],
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1712055405,
+        "narHash": "sha256-59jhaotSaKDtH43FVR43Z5tKB26tb5Kog1Uw/NOw/z4=",
+        "owner": "mbssrc",
+        "repo": "givc",
+        "rev": "8659631e26feaa0a94da53824e0b357a010f2813",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mbssrc",
+        "repo": "givc",
+        "type": "github"
+      }
+    },
     "jetpack-nixos": {
       "inputs": {
         "nixpkgs": [
@@ -395,6 +421,7 @@
         "flake-parts": "flake-parts",
         "flake-root": "flake-root",
         "flake-utils": "flake-utils_2",
+        "givc": "givc",
         "jetpack-nixos": "jetpack-nixos",
         "lanzaboote": "lanzaboote",
         "microvm": "microvm",
